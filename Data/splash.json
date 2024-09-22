@@ -1,20 +1,23 @@
 {
   "result": {
-    "index": [
+    "client": [
       {
         "client_id": 1,
         "splash_url": "https://binnutours.com/assets/images/_car-big.png",
-        "client_name": "TAXI"
+        "client_name": "TAXI",
+        "is_active": 0
       },
       {
         "client_id": 2,
         "splash_url": "https://www.vocso.com/blog/wp-content/uploads/2022/02/eCommerce-Website-Features-1920-x-1080.jpg",
-        "client_name": "ECOMMERECE"
+        "client_name": "ECOMMERECE",
+        "is_active": 1
       },
       {
         "client_id": 3,
         "splash_url": "https://blogimage.vantagefit.io/vfitimages/2023/04/VFit__How-To-Observe-National-Kidney-Month-At-Work--.png",
-        "client_name": "SOCIAL"
+        "client_name": "SOCIAL",
+        "is_active": 0
       }
     ]
   }
