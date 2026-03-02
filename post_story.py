@@ -14,6 +14,11 @@ access_token = os.environ.get("FB_ACCESS_TOKEN")
 
 today = date.today().strftime("%d %B %Y")
 
+print("DEBUG: Starting script...")
+print(f"DEBUG: GROQ_API_KEY present: {'yes' if os.environ.get('GROQ_API_KEY') else 'NO'}")
+print(f"DEBUG: FB_PAGE_ID: {page_id}")
+print(f"DEBUG: FB_ACCESS_TOKEN length: {len(access_token) if access_token else 0}")
+
 # ==============================================
 # TUMHARA EXACT PROMPT
 # ==============================================
@@ -57,7 +62,6 @@ Image prompts केवल दृश्य वर्णन के लिए ह�
 एक प्रमाणिक हिंदू धर्म कथा प्रारंभ करें।"""
 
 full_prompt = user_prompt + """
-
 Output exactly is format mein (kuch extra mat add karna):
 
 [Title in Hindi]
@@ -79,6 +83,7 @@ Image Generation Prompts (Story based)
 # GENERATE STORY FROM GROQ
 # ==============================================
 print("Generating story from Groq...")
+full_output = ""
 try:
     response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
@@ -87,73 +92,91 @@ try:
         max_tokens=1800
     )
     full_output = response.choices[0].message.content.strip()
-    print("DEBUG: Full LLM Output length:", len(full_output))
-    # print("DEBUG: Full LLM Output first 500 chars:", full_output[:500])  # uncomment if needed
+    print("DEBUG: Groq response received. Length:", len(full_output))
+    # Optional: print first 500 chars for debug (comment out later)
+    # print("DEBUG: First 500 chars:", full_output[:500])
 except Exception as e:
-    print("ERROR: Groq API failed:", str(e))
+    print("ERROR: Groq API call failed:", str(e))
     full_output = ""
-    source = "स्रोत उपलब्ध नहीं"
-    story_text = "आज की कथा उत्पन्न नहीं हो सकी। कृपया बाद में पुनः प्रयास करें।"
-    title = "कथा उत्पन्न करने में त्रुटि"
 
 # ==============================================
-# SAFE PARSING
+# SAFE PARSING WITH FALLBACKS
 # ==============================================
-print("Parsing story...")
+print("Parsing LLM output...")
 
-# Title
-title_match = re.search(r'^(.*)$', full_output, re.MULTILINE)
-title = title_match.group(1).strip() if title_match else "प्रमाणिक हिंदू कथा"
+# Title (first non-empty line)
+title = "प्रमाणिक हिंदू कथा"
+if full_output:
+    lines = [line.strip() for line in full_output.splitlines() if line.strip()]
+    if lines:
+        title = lines[0]
 
-# Story end
-story_end = full_output.find("— यह कथा किस ग्रंथ")
-if story_end == -1:
-    story_end = full_output.find("Image Generation Prompts")
-if story_end == -1:
-    story_end = len(full_output)
+# Story text (until source line)
+story_end_keywords = [
+    "— यह कथा किस ग्रंथ",
+    "यह कथा किस ग्रंथ",
+    "Image Generation Prompts",
+    "Image prompts"
+]
+story_end = len(full_output)
+for kw in story_end_keywords:
+    pos = full_output.find(kw)
+    if pos != -1 and pos < story_end:
+        story_end = pos
 story_text = full_output[:story_end].strip()
 
-# Source - safe extraction
-source_match = re.search(r'— यह कथा किस ग्रंथ से ली गई है और कौन-सा प्रसंग है:(.*?)(?=Image Generation Prompts|$)', full_output, re.DOTALL | re.IGNORECASE)
-source = source_match.group(1).strip() if source_match else "प्रमाणिक हिंदू ग्रंथ से लिया गया प्रसंग (स्रोत स्पष्ट नहीं मिला)"
+# Source (very flexible regex)
+source = "प्रमाणिक हिंदू ग्रंथ से लिया गया प्रसंग (स्रोत स्पष्ट नहीं मिला)"
+source_patterns = [
+    r'—\s*यह कथा किस ग्रंथ से ली गई है और कौन-सा प्रसंग है\s*:\s*(.+?)(?=\s*Image|\Z)',
+    r'यह कथा किस ग्रंथ.*?:?\s*(.+?)(?=\s*Image|\Z)',
+    r'ग्रंथ.*?:?\s*(.+?)(?=\s*Image|\Z)'
+]
+for pattern in source_patterns:
+    match = re.search(pattern, full_output, re.IGNORECASE | re.DOTALL)
+    if match:
+        source = match.group(1).strip()
+        break
 print("DEBUG: Parsed Source:", source)
 
-# Image prompts
+# Image prompts (fallback if none found)
 img_prompts = re.findall(r'\d+\.\s*(.+?)(?=\n\d+\.|\Z)', full_output, re.DOTALL)
+if not img_prompts:
+    img_prompts = ["Beautiful traditional Hindu devotional scene of Lord Shiva meditating on Kailash"]
 print("DEBUG: Found image prompts:", len(img_prompts))
 
 # ==============================================
-# GENERATE IMAGES (Pollinations.ai - free, no watermark)
+# GENERATE IMAGES
 # ==============================================
 print("🎨 Generating images...")
 image_urls = []
 main_image_path = "/tmp/daily_story_main.jpg"
 
-for i, prompt in enumerate(img_prompts[:7] or ["Beautiful traditional Hindu devotional scene of Lord Shiva"]):
+for i, base_prompt in enumerate(img_prompts[:7]):
     try:
-        full_img_prompt = prompt.strip() + ", traditional Hindu devotional art style, vibrant colors, highly detailed, cinematic lighting, serene atmosphere, no text, no watermark, 4k"
+        full_img_prompt = base_prompt.strip() + ", traditional Hindu devotional art style, vibrant colors, highly detailed, cinematic lighting, serene atmosphere, no text, no watermark, 4k"
         encoded = quote(full_img_prompt)
         img_url = f"https://image.pollinations.ai/prompt/{encoded}?width=1024&height=576&model=flux&nologo=true&safe=true"
         
         if i == 0:
-            img_response = requests.get(img_url, timeout=20)
+            img_response = requests.get(img_url, timeout=25)
             if img_response.status_code == 200:
                 with open(main_image_path, "wb") as f:
                     f.write(img_response.content)
                 print("Main image downloaded successfully")
             else:
-                print("Main image download failed:", img_response.status_code)
+                print(f"Main image download failed (status {img_response.status_code})")
         
         image_urls.append(img_url)
         print(f"✅ Image {i+1} ready → {img_url}")
     except Exception as e:
-        print(f"Image {i+1} error:", str(e))
+        print(f"Image {i+1} generation error:", str(e))
 
 # ==============================================
-# FACEBOOK POST (only main image)
+# FACEBOOK POST
 # ==============================================
+print("Attempting Facebook post...")
 if os.path.exists(main_image_path):
-    print("Posting to Facebook...")
     try:
         full_caption = f"""{title}
 
@@ -170,19 +193,19 @@ if os.path.exists(main_image_path):
         payload = {'message': full_caption, 'access_token': access_token}
         files = {'source': open(main_image_path, 'rb')}
 
-        r = requests.post(post_url, data=payload, files=files, timeout=30)
-        if r.status_code == 200:
+        r = requests.post(post_url, data=payload, files=files, timeout=40)
+        if r.status_code in (200, 201):
             print("✅ Facebook post successful!")
             print("Response:", r.json())
         else:
-            print("❌ FB error:", r.status_code, r.text)
+            print("❌ FB API error:", r.status_code, r.text)
     except Exception as e:
-        print("Facebook posting error:", str(e))
+        print("Facebook posting exception:", str(e))
 else:
-    print("Main image not found - skipping FB post")
+    print("Main image file missing - skipping FB post")
 
 # ==============================================
-# REELS EXTRA IMAGES OUTPUT
+# REELS EXTRA IMAGES
 # ==============================================
 print("\n🎥 REELS KE LIYE EXTRA IMAGES:")
 for i, url in enumerate(image_urls[1:], 2):
