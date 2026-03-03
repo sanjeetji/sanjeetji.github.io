@@ -1,198 +1,256 @@
 import os
 import requests
 import re
+import time
+import random
 from datetime import date
 from groq import Groq
 from urllib.parse import quote
 
 # ==============================================
-# CONFIG & DEBUG SECRETS
+# CONFIG & SECRETS
 # ==============================================
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 page_id = os.environ.get("FB_PAGE_ID")
 access_token = os.environ.get("FB_ACCESS_TOKEN")
 
 print("DEBUG: Script started")
-print(f"DEBUG: GROQ_API_KEY present: {'YES' if os.environ.get('GROQ_API_KEY') else 'NO'}")
-print(f"DEBUG: FB_PAGE_ID: {page_id}")
+print(f"DEBUG: Setting Page ID: {page_id}")
 print(f"DEBUG: FB_ACCESS_TOKEN length: {len(access_token) if access_token else 0}")
 
-today = date.today().strftime("%d %B %Y")
+# ==============================================
+# FACEBOOK TOKEN DIAGNOSTIC (AUTO-SWITCH ID)
+# ==============================================
+if access_token:
+    print("--- Facebook Diagnostic Start ---")
+    try:
+        me_url = f"https://graph.facebook.com/v20.0/me?fields=id,name,category&access_token={access_token}"
+        me_resp = requests.get(me_url)
+        if me_resp.status_code == 200:
+            me_data = me_resp.json()
+            print(f"✅ Token represents: {me_data.get('name')} (ID: {me_data.get('id')})")
+            if 'category' in me_data:
+                print(f"🔄 Auto-switching Page ID to {me_data.get('id')}")
+                page_id = me_data.get('id')
+        else:
+            print(f"❌ Token Check Failed: {me_resp.text}")
+    except Exception as e:
+        print(f"⚠️ Diagnostic exception: {str(e)}")
+    print("--- Facebook Diagnostic End ---\n")
+
+# ==============================================
+# FACEBOOK HELPER WITH RETRIES
+# ==============================================
+def fb_call(url, data, file_path=None, max_retries=3):
+    # Ensure current global page_id is used if URL placeholder exists
+    for i in range(max_retries):
+        try:
+            print(f"DEBUG: FB Call Attempt {i+1}...")
+            if file_path:
+                with open(file_path, 'rb') as f:
+                    files = {'source': ('image.jpg', f, 'image/jpeg')}
+                    r = requests.post(url, data=data, files=files, timeout=90)
+            else:
+                r = requests.post(url, data=data, timeout=90)
+            
+            print(f"DEBUG: FB Status: {r.status_code}")
+            if r.status_code in [200, 201]:
+                return r
+            
+            try:
+                err = r.json().get("error", {})
+                if err.get("is_transient") or err.get("code") in [1, 2, 10]:
+                    print(f"⚠️ FB Transient Busy (Attempt {i+1}): {err.get('message')}. Retrying in 40s...")
+                    time.sleep(40)
+                    continue
+                else:
+                    print(f"❌ FB API Error: {r.status_code} - {r.text}") # Improved error reporting
+            except Exception as json_e: # Catch JSON parsing error specifically
+                print(f"❌ FB Raw Error (Status: {r.status_code}): {r.text} (JSON parse error: {json_e})") # Improved error reporting
+            
+            return r
+        except Exception as e:
+            print(f"⚠️ Request exception: {str(e)}")
+            time.sleep(20)
+    return None
 
 # ==============================================
 # PROMPT
 # ==============================================
 user_prompt = """आप एक अत्यंत विद्वान, शास्त्र-निष्ठ और प्रमाणिक हिंदू धर्म कथावाचक हैं।
-मुझे हर बार रैंडम रूप से चुनी गई, लेकिन पूरी तरह सत्य और ग्रंथों पर आधारित एक हिंदू धर्म कथा सुनाइए।
-कथा केवल और केवल निम्न प्रमाणिक स्रोतों से ली जाए:
-उपनिषद,
-चारों वेदों से जुड़े आख्यान,
-18 महापुराण एवं उपपुराण,
-श्रीमद्भागवत पुराण,
-शिव पुराण,
-महाभारत,
-रामायण,
-भगवद्गीता,
-और अन्य मान्य व प्रमाणिक हिंदू धर्मग्रंथ।
-⚠️ बहुत महत्वपूर्ण नियम:
-कहानी पूरी तरह मूल शास्त्रों पर आधारित हो —
-कोई कल्पना, आधुनिक बदलाव, फिक्शनल दृश्य या मनगढ़ंत पात्र न जोड़े जाएँ।
-हर बार किसी एक वास्तविक प्रसंग, घटना या संवाद को रैंडम रूप से चुनिए।
-भाषा केवल सरल, शुद्ध और भावपूर्ण हिंदी में हो।
-📖 Story ka title in hindi sabse upar
-कहानी कम से कम 260 शब्दों की हो और 1–2 मिनट में सुनाई जा सके।
-कहानी में पात्रों के संवाद, वातावरण और भावनाएँ हों —
-लेकिन किसी भी तथ्य या क्रम में परिवर्तन न किया जाए।
-किसी भी प्रकार का आधुनिक उदाहरण, तुलना, मोटिवेशनल भाषण या निजी राय शामिल न हो।
-कहानी समाप्त होने के बाद स्पष्ट रूप से यह लिखें:
-— यह कथा किस ग्रंथ से ली गई है और कौन-सा प्रसंग है।
-इसके बाद एक अलग सेक्शन में यह भी दें:
-“Image Generation Prompts (Story based)”
-जहाँ उसी कहानी के आधार पर
-कम से कम 5 से 7 अलग-अलग दृश्यों के लिए
-AI image बनाने योग्य, स्पष्ट और दृश्य-प्रधान prompts दिए जाएँ।
-हर image prompt में यह स्पष्ट हो:
-कौन-सा पात्र है
-स्थान (वन, आश्रम, युद्धभूमि, कैलाश, अयोध्या, द्वारका आदि)
-समय या भाव (शांति, युद्ध, करुणा, भक्ति, संकट, विजय आदि)
-दृश्य का मुख्य केंद्र क्या है
-Image prompts केवल दृश्य वर्णन के लिए हों —
-उनमें कहानी दोबारा न लिखी जाए।
-अब उपरोक्त सभी नियमों का पालन करते हुए
-एक प्रमाणिक हिंदू धर्म कथा प्रारंभ करें।"""
+मुझे हर बार रैंडम रूप से चुनी गई, प्रमाणिक और अत्यंत विस्तारपूर्वक हिंदू धर्म कथा सुनाइए।
+
+⚠️ अनिवार्य नियम:
+1. कथा कम से कम 8-10 लंबे अनुच्छेदों (Paragraphs) में होनी चाहिए। (Target: 800 words)
+2. हर संवाद, दृश्य और भावना का गहरा वर्णन करें। 
+3. "Image Generation Prompts - ENGLISH ONLY" सेक्शन में 5-7 विस्तृत AI prompts ENGLISH में दें।
+"""
 
 full_prompt = user_prompt + """
-Output exactly is format mein (kuch extra mat add karna):
+Output exactly in this format:
 
 [Title in Hindi]
 
-[poori kahani 260+ words]
+[Story - 8+ Paragraphs - 800 words - Elaborate deeply]
 
 — यह कथा किस ग्रंथ से ली गई है और कौन-सा प्रसंग है: [source]
 
-Image Generation Prompts (Story based)
-1. [prompt 1]
-2. [prompt 2]
-3. [prompt 3]
-4. [prompt 4]
-5. [prompt 5]
-6. [prompt 6]
-7. [prompt 7]"""
+Image Generation Prompts - ENGLISH ONLY
+1. [Prompt 1]
+2. [Prompt 2]
+...
+"""
 
 # ==============================================
 # CALL GROQ
 # ==============================================
 print("Calling Groq for story...")
-full_output = ""
+full_output = "कथा उत्पन्न नहीं हो सकी।"
 try:
     response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
         messages=[{"role": "user", "content": full_prompt}],
-        temperature=0.65,
-        max_tokens=1800
+        temperature=0.7,
+        max_tokens=3500
     )
     full_output = response.choices[0].message.content.strip()
-    print("Groq success. Output length:", len(full_output))
-except Exception as e:
-    print("Groq error:", str(e))
-    full_output = "कथा उत्पन्न नहीं हो सकी।"
+    print("Groq success. Output len:", len(full_output))
+except Exception as e: print("Groq error:", str(e))
 
 # ==============================================
-# SAFE PARSING
+# PARSING
 # ==============================================
 print("Parsing output...")
+story_parts = full_output.split("Image Generation Prompts")
+story_main = story_parts[0].strip()
+lines = [l.strip() for l in story_main.splitlines() if l.strip()]
+title = lines[0] if lines else "प्रमाणिक हिंदू कथा"
 
-# Title - first line
-title = "प्रमाणिक हिंदू कथा"
-if full_output:
-    lines = [line.strip() for line in full_output.splitlines() if line.strip()]
-    if lines:
-        title = lines[0]
+# Improved word count & source extraction
+word_count = len(story_main.split())
+print(f"DEBUG: Story word count: ~{word_count} words")
 
-# Story text
-story_end = len(full_output)
-for kw in ["— यह कथा किस ग्रंथ", "Image Generation Prompts", "Image prompts"]:
-    pos = full_output.lower().find(kw.lower())
-    if pos != -1 and pos < story_end:
-        story_end = pos
-story_text = full_output[:story_end].strip()
+source_match = re.search(r'— यह कथा किस ग्रंथ से ली गई है और कौन-सा प्रसंग है: (.+)', full_output, re.IGNORECASE)
+if not source_match:
+    source_match = re.search(r'— (.+)', lines[-1])
+source = source_match.group(1).strip() if source_match else "प्राचीन शास्त्र"
 
-# Source
-source = "प्रमाणिक हिंदू ग्रंथ (स्रोत स्पष्ट नहीं)"
-source_match = re.search(r'—\s*यह\s*कथा\s*किस\s*ग्रंथ\s*से\s*ली\s*गई\s*है\s*और\s*कौन-सा\s*प्रसंग\s*है\s*:\s*(.+?)(?=\s*Image|\Z)', full_output, re.IGNORECASE | re.DOTALL)
-if source_match:
-    source = source_match.group(1).strip()
-print("Parsed source:", source)
-
-# Image prompts
-img_prompts = re.findall(r'\d+\.\s*(.+?)(?=\n\d+\.|\Z)', full_output, re.DOTALL)
-print("Image prompts found:", len(img_prompts))
+img_prompts = re.findall(r'\d+\.\s*(.+)', story_parts[-1] if len(story_parts)>1 else "")
+print(f"Found {len(img_prompts)} prompts.")
 
 # ==============================================
-# IMAGES
+# IMAGES (STABLE WATERFALL & LOCAL CAPTURE)
 # ==============================================
 print("Generating images...")
-image_urls = []
-main_image_path = "/tmp/story_main.jpg"
+main_image_path = os.path.join(os.getcwd(), "story_image.jpg")
+image_urls_log = []
 
-fallback_prompt = "Beautiful traditional Hindu devotional scene of Lord Shiva on Kailash, serene, vibrant colors, no text"
-
-for i, base_prompt in enumerate(img_prompts[:7] or [fallback_prompt]):
+for i, base_p in enumerate(img_prompts[:7]):
     try:
-        full_prompt = base_prompt.strip() + ", traditional Hindu devotional art style, vibrant colors, highly detailed, cinematic lighting, serene atmosphere, no text, no watermark, 4k"
-        encoded = quote(full_prompt)
-        img_url = f"https://image.pollinations.ai/prompt/{encoded}?width=1024&height=576&model=flux&nologo=true&safe=true"
+        sd = random.randint(1, 999999)
+        p_enc = quote(base_p[:200] + ", vibrant, spiritual, highly detailed, 4k")
+        image_urls_log.append(f"https://image.pollinations.ai/prompt/{p_enc}?width=1024&height=1024&seed={sd}")
         
         if i == 0:
-            resp = requests.get(img_url, timeout=25)
-            if resp.status_code == 200:
-                with open(main_image_path, "wb") as f:
-                    f.write(resp.content)
-                print("Main image OK")
-            else:
-                print("Image download failed:", resp.status_code)
-        
-        image_urls.append(img_url)
-        print(f"Image {i+1}: {img_url}")
-    except Exception as e:
-        print(f"Image {i+1} error:", str(e))
+            success = False
+            provs = [
+                {"n": "Hercai", "u": f"https://hercai.onrender.com/v3/text2image?prompt={p_enc}"},
+                {"n": "Unsplash", "type": "search"},
+                {"n": "Pollinations-Turbo", "u": f"https://image.pollinations.ai/prompt/{p_enc}?width=1024&height=1024&model=turbo&nologo=true&seed={sd}"}
+            ]
+            
+            for p in provs:
+                print(f"DEBUG: Trying {p['n']}...")
+                try:
+                    d = None
+                    if p.get("type") == "search":
+                        sub_kws = ["krishna", "shiva", "rama", "hanuman", "ganesha", "durga", "vishnu", "hindu", "temple", "spiritual"]
+                        story_low = story_main.lower()
+                        kw = "hindu deity"
+                        for k in sub_kws:
+                            if k in story_low: kw = k; break
+                        
+                        fallback_ids = {
+                            "krishna": "1627844718626-4c6b96366607",
+                            "shiva": "1641320349487-ce111bd290f6",
+                            "temple": "1590766940554-634a7ed41450"
+                        }
+                        fid = fallback_ids.get(kw, fallback_ids["temple"])
+                        r = requests.get(f"https://images.unsplash.com/photo-{fid}?q=80&w=1024", timeout=30)
+                        if r.status_code == 200: d = r.content
+                    else:
+                        r = requests.get(p['u'], timeout=45)
+                        if r.status_code == 200:
+                            if p['n'] == "Hercai":
+                                u = r.json().get("url")
+                                if u: d = requests.get(u, timeout=30).content
+                            else: d = r.content
+                    
+                    if d and d.startswith(b'\xff\xd8'):
+                        with open(main_image_path, "wb") as f: f.write(d)
+                        print(f"✅ Image Success! ({p['n']})")
+                        success = True
+                        break
+                except: pass
+            
+            if not success:
+                print("❌ waterfall failed. Using Krishna fallback.")
+                r = requests.get("https://images.unsplash.com/photo-1627844718626-4c6b96366607?q=80&w=1024", timeout=20)
+                with open(main_image_path, "wb") as f: f.write(r.content)
+        time.sleep(1)
+    except: pass
 
 # ==============================================
 # FACEBOOK POST
 # ==============================================
-print("Posting to Facebook...")
-if os.path.exists(main_image_path):
+if os.path.exists(main_image_path) and access_token:
+    print(f"Posting to Facebook (Page ID: {page_id})...")
+    caption = f"{title}\n\n{story_main[:5000]}\n\n🙏 #SanatanDharma #HinduKatha #Bhakti"
+
+    # 1. Post to Feed directly
+    print("Action: Creating Feed Post...")
     try:
-        caption = f"""{title}
-
-{story_text}
-
-— यह कथा किस ग्रंथ से ली गई है और कौन-सा प्रसंग है: {source}
-
-🙏 जय श्री राम | हर हर महादेव
-#SanatanDharma #HarHarMahadev #HinduKatha #DailyKatha #Bhakti
-
-🔥 Poori story Reel mein dekhne ke liye comment "REEL" likho"""
-
-        url = f"https://graph.facebook.com/v20.0/{page_id}/photos"
-        payload = {'message': caption, 'access_token': access_token}
-        files = {'source': open(main_image_path, 'rb')}
-
-        resp = requests.post(url, data=payload, files=files, timeout=40)
-        if resp.status_code in [200, 201]:
-            print("✅ Post successful!")
-            print("FB Response:", resp.json())
+        up_url = f"https://graph.facebook.com/v20.0/{page_id}/photos"
+        payload_feed = {
+            'message': caption,
+            'published': 'true',
+            'access_token': access_token
+        }
+        feed_r = fb_call(up_url, payload_feed, file_path=main_image_path, max_retries=3)
+        
+        if feed_r and feed_r.status_code in [200, 201]:
+            print(f"✅ SUCCESS! Feed Post ID: {feed_r.json().get('post_id', feed_r.json().get('id'))}")
         else:
-            print("FB Error:", resp.status_code, resp.text)
+            print(f"❌ Feed Post failed.")
     except Exception as e:
-        print("FB Post exception:", str(e))
-else:
-    print("No main image - skipping post")
+        print(f"❌ FB Feed error: {str(e)}")
 
-# ==============================================
-# REELS LINKS
-# ==============================================
+    # 2. Post to Story
+    print("Action: Creating Story Post...")
+    try:
+        up_url = f"https://graph.facebook.com/v20.0/{page_id}/photos"
+        payload_story = {
+            'published': 'false', 
+            'access_token': access_token
+        }
+        upload_r = fb_call(up_url, payload_story, file_path=main_image_path, max_retries=3)
+        
+        if upload_r and upload_r.status_code in [200, 201]:
+            pid = upload_r.json().get('id')
+            print(f"✅ Photo Uploaded for Story (ID: {pid})")
+            
+            story_r = requests.post(f"https://graph.facebook.com/v20.0/{page_id}/photo_stories", 
+                          data={'photo_id': pid, 'access_token': access_token}, timeout=40)
+            if story_r.status_code in [200, 201]:
+                print("✅ Story posted!")
+            else:
+                print(f"❌ Story failed: {story_r.text}")
+        else:
+            print("❌ Photo upload for story failed.")
+    except Exception as e:
+        print(f"❌ FB Story error: {str(e)}")
+
+else: print("Skipping post (Missing image or token)")
+
 print("\nREELS IMAGES:")
-for i, url in enumerate(image_urls[1:], 2):
-    print(f"Image {i}: {url}")
-print("\nLinks save kar lo for CapCut")
+for i, url in enumerate(image_urls_log[1:], 2): print(f"Image {i}: {url}")
