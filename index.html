@@ -9,635 +9,668 @@
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#0a0a0f;
-  --bg2:#111118;
-  --surface:#16161f;
-  --border:#222233;
-  --text:#e8e6f0;
-  --text-dim:#8a879a;
-  --accent:#6c63ff;
-  --accent2:#00e4a0;
-  --accent3:#ff6b9d;
+  --bg:#0a0a0f;--bg2:#111118;--surface:#16161f;--border:#222233;
+  --text:#e8e6f0;--text-dim:#8a879a;
+  --accent:#6c63ff;--accent2:#00e4a0;--accent3:#ff6b9d;--accent4:#fbbf24;--accent5:#38bdf8;
   --glow:rgba(108,99,255,.15);
 }
 html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:var(--accent) var(--bg)}
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
 ::selection{background:var(--accent);color:#fff}
 
-/* === CURSOR GLOW === */
 .cursor-glow{position:fixed;width:600px;height:600px;border-radius:50%;pointer-events:none;z-index:0;
   background:radial-gradient(circle,rgba(108,99,255,.07) 0%,transparent 70%);
   transform:translate(-50%,-50%);transition:opacity .3s}
 
-/* === NAV === */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.2rem 2rem;
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;
   display:flex;align-items:center;justify-content:space-between;
-  backdrop-filter:blur(20px);background:rgba(10,10,15,.7);border-bottom:1px solid rgba(34,34,51,.5);
+  backdrop-filter:blur(20px);background:rgba(10,10,15,.75);border-bottom:1px solid rgba(34,34,51,.5);
   transition:transform .3s}
 nav.hidden{transform:translateY(-100%)}
 .nav-logo{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:800;
   background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.nav-links{display:flex;gap:2rem;list-style:none}
-.nav-links a{color:var(--text-dim);text-decoration:none;font-size:.9rem;font-weight:500;letter-spacing:.5px;
+.nav-links{display:flex;gap:1.8rem;list-style:none}
+.nav-links a{color:var(--text-dim);text-decoration:none;font-size:.85rem;font-weight:500;letter-spacing:.5px;
   transition:color .3s;position:relative}
 .nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;
   background:var(--accent);transition:width .3s}
-.nav-links a:hover{color:var(--text)}
-.nav-links a:hover::after{width:100%}
-.nav-cta{padding:.6rem 1.4rem;border-radius:100px;background:var(--accent);color:#fff;
-  text-decoration:none;font-size:.85rem;font-weight:600;border:none;cursor:pointer;
+.nav-links a:hover{color:var(--text)}.nav-links a:hover::after{width:100%}
+.nav-cta{padding:.55rem 1.3rem;border-radius:100px;background:var(--accent);color:#fff;
+  text-decoration:none;font-size:.82rem;font-weight:600;border:none;cursor:pointer;
   transition:transform .2s,box-shadow .2s}
 .nav-cta:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(108,99,255,.4)}
 
-/* === HERO === */
 .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;padding:6rem 2rem 4rem}
 .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;max-width:1200px;width:100%;align-items:center}
-.hero-text h1{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,6vw,4.5rem);font-weight:900;
-  line-height:1.05;margin-bottom:1rem}
+.hero-text h1{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,5.5vw,4.2rem);font-weight:900;line-height:1.05;margin-bottom:1rem}
 .hero-text h1 .line{display:block;opacity:0;transform:translateY(40px);animation:slideUp .8s ease forwards}
 .hero-text h1 .line:nth-child(1){animation-delay:.3s}
 .hero-text h1 .line:nth-child(2){animation-delay:.5s;
   background:linear-gradient(135deg,var(--accent),var(--accent2),var(--accent3));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .hero-text h1 .line:nth-child(3){animation-delay:.7s}
-.hero-sub{font-size:1.15rem;color:var(--text-dim);margin:1.5rem 0 2rem;max-width:500px;
+.hero-sub{font-size:1.1rem;color:var(--text-dim);margin:1.5rem 0 2rem;max-width:520px;
   opacity:0;animation:fadeIn 1s ease .9s forwards;line-height:1.7}
-.hero-actions{display:flex;gap:1rem;opacity:0;animation:fadeIn 1s ease 1.1s forwards;flex-wrap:wrap}
-.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.85rem 2rem;border-radius:100px;
-  font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;text-decoration:none;
+.hero-actions{display:flex;gap:.8rem;opacity:0;animation:fadeIn 1s ease 1.1s forwards;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.8rem 1.8rem;border-radius:100px;
+  font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;text-decoration:none;
   cursor:pointer;transition:all .3s;border:none}
-.btn-primary{background:linear-gradient(135deg,var(--accent),#8b5cf6);color:#fff;
-  box-shadow:0 4px 20px rgba(108,99,255,.3)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),#8b5cf6);color:#fff;box-shadow:0 4px 20px rgba(108,99,255,.3)}
 .btn-primary:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(108,99,255,.5)}
 .btn-outline{background:transparent;color:var(--text);border:1.5px solid var(--border)}
 .btn-outline:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-3px)}
 
-/* Hero Visual */
 .hero-visual{position:relative;display:flex;justify-content:center;align-items:center;
   opacity:0;animation:scaleIn 1s ease .5s forwards}
-.avatar-ring{width:320px;height:320px;border-radius:50%;position:relative;
+.avatar-ring{width:300px;height:300px;border-radius:50%;position:relative;
   background:conic-gradient(from 0deg,var(--accent),var(--accent2),var(--accent3),var(--accent));
   padding:4px;animation:spin 8s linear infinite}
 .avatar-ring::before{content:'';position:absolute;inset:4px;border-radius:50%;background:var(--bg)}
 .avatar-inner{width:100%;height:100%;border-radius:50%;
-  background:linear-gradient(135deg,var(--surface),var(--bg2));
   display:flex;align-items:center;justify-content:center;
-  font-family:'Playfair Display',serif;font-size:5rem;font-weight:900;
+  font-family:'Playfair Display',serif;font-size:4.5rem;font-weight:900;
   background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.floating-badge{position:absolute;padding:.6rem 1.2rem;border-radius:12px;
+.floating-badge{position:absolute;padding:.55rem 1rem;border-radius:12px;
   background:var(--surface);border:1px solid var(--border);
-  font-size:.8rem;font-weight:600;white-space:nowrap;
+  font-size:.75rem;font-weight:600;white-space:nowrap;
   box-shadow:0 8px 30px rgba(0,0,0,.3);animation:float 3s ease-in-out infinite}
-.floating-badge.b1{top:10%;right:-20px;animation-delay:0s}
-.floating-badge.b2{bottom:15%;left:-30px;animation-delay:1s}
-.floating-badge.b3{top:50%;right:-40px;animation-delay:2s}
-.floating-badge .badge-icon{margin-right:.4rem}
+.floating-badge.b1{top:5%;right:-30px;animation-delay:0s}
+.floating-badge.b2{bottom:10%;left:-40px;animation-delay:1s}
+.floating-badge.b3{top:45%;right:-50px;animation-delay:2s}
+.floating-badge.b4{bottom:40%;left:-25px;animation-delay:.5s}
+.badge-icon{margin-right:.3rem}
 
-/* Stats strip */
-.stats-strip{display:flex;gap:3rem;margin-top:2.5rem;opacity:0;animation:fadeIn 1s ease 1.3s forwards;flex-wrap:wrap}
-.stat{text-align:left}
-.stat-num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:800;
+.stats-strip{display:flex;gap:2.5rem;margin-top:2rem;opacity:0;animation:fadeIn 1s ease 1.3s forwards;flex-wrap:wrap}
+.stat-num{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:800;
   background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.stat-label{font-size:.78rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1.5px;margin-top:.2rem}
+.stat-label{font-size:.72rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1.5px;margin-top:.15rem}
 
-/* === SECTION COMMON === */
-section{padding:6rem 2rem;position:relative}
-.section-header{text-align:center;margin-bottom:4rem}
-.section-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.75rem;
+section{padding:5rem 2rem;position:relative}
+.container{max-width:1200px;margin:0 auto}
+.section-header{text-align:center;margin-bottom:3.5rem}
+.section-tag{display:inline-block;font-family:'JetBrains Mono',monospace;font-size:.72rem;
   color:var(--accent);text-transform:uppercase;letter-spacing:3px;
-  padding:.4rem 1rem;border:1px solid rgba(108,99,255,.3);border-radius:100px;margin-bottom:1rem}
-.section-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:800}
-.section-desc{color:var(--text-dim);max-width:600px;margin:1rem auto 0;font-size:1.05rem}
+  padding:.4rem 1rem;border:1px solid rgba(108,99,255,.3);border-radius:100px;margin-bottom:.8rem}
+.section-title{font-family:'Playfair Display',serif;font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:800}
+.section-desc{color:var(--text-dim);max-width:600px;margin:.8rem auto 0;font-size:1rem}
 
-/* === SKILLS === */
-.skills-section{background:var(--bg2)}
-.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;max-width:1100px;margin:0 auto}
-.skill-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2rem;
+.alt-bg{background:var(--bg2)}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem}
+.skill-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.8rem;
   transition:all .4s;position:relative;overflow:hidden}
 .skill-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
   background:linear-gradient(90deg,var(--accent),var(--accent2));transform:scaleX(0);
   transform-origin:left;transition:transform .4s}
-.skill-card:hover{transform:translateY(-6px);border-color:var(--accent);box-shadow:0 12px 40px var(--glow)}
+.skill-card:hover{transform:translateY(-5px);border-color:var(--accent);box-shadow:0 12px 40px var(--glow)}
 .skill-card:hover::before{transform:scaleX(1)}
-.skill-icon{font-size:2rem;margin-bottom:1rem;display:block}
-.skill-card h3{font-size:1.1rem;font-weight:700;margin-bottom:.8rem}
-.skill-card p{font-size:.88rem;color:var(--text-dim);line-height:1.7}
-.skill-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1rem}
-.skill-tags span{font-family:'JetBrains Mono',monospace;font-size:.7rem;padding:.3rem .7rem;
+.skill-icon{font-size:1.8rem;margin-bottom:.8rem;display:block}
+.skill-card h3{font-size:1rem;font-weight:700;margin-bottom:.6rem}
+.skill-card p{font-size:.82rem;color:var(--text-dim);line-height:1.65}
+.skill-tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.8rem}
+.skill-tags span{font-family:'JetBrains Mono',monospace;font-size:.65rem;padding:.25rem .55rem;
   border-radius:6px;background:rgba(108,99,255,.1);color:var(--accent);border:1px solid rgba(108,99,255,.15)}
 
-/* === EXPERIENCE === */
+.domain-group{margin-bottom:3rem}
+.domain-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.5rem;padding-bottom:.8rem;border-bottom:1px solid var(--border)}
+.domain-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;
+  background:linear-gradient(135deg,rgba(108,99,255,.15),rgba(0,228,160,.1));border:1px solid var(--border);flex-shrink:0}
+.domain-info h3{font-size:1.15rem;font-weight:700}.domain-info p{font-size:.82rem;color:var(--text-dim)}
+.apps-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.2rem}
+.app-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.6rem;
+  transition:all .4s;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.app-card:hover{transform:translateY(-5px);border-color:var(--accent2);box-shadow:0 10px 35px rgba(0,228,160,.1)}
+.app-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.8rem}
+.app-badge{font-family:'JetBrains Mono',monospace;font-size:.62rem;padding:.2rem .6rem;border-radius:100px;
+  text-transform:uppercase;letter-spacing:1.5px;font-weight:600}
+.app-badge.customer{background:rgba(108,99,255,.12);color:var(--accent);border:1px solid rgba(108,99,255,.2)}
+.app-badge.driver{background:rgba(0,228,160,.1);color:var(--accent2);border:1px solid rgba(0,228,160,.2)}
+.app-badge.operator{background:rgba(255,107,157,.1);color:var(--accent3);border:1px solid rgba(255,107,157,.2)}
+.app-badge.standalone{background:rgba(251,191,36,.1);color:var(--accent4);border:1px solid rgba(251,191,36,.2)}
+.app-badge.enterprise{background:rgba(56,189,248,.1);color:var(--accent5);border:1px solid rgba(56,189,248,.2)}
+.play-link{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .8rem;border-radius:8px;
+  background:rgba(0,228,160,.08);border:1px solid rgba(0,228,160,.15);color:var(--accent2);
+  text-decoration:none;font-size:.72rem;font-weight:600;transition:all .3s;white-space:nowrap}
+.play-link:hover{background:var(--accent2);color:#000;transform:translateY(-2px)}
+.play-link svg{width:14px;height:14px}
+.app-card h4{font-size:1rem;font-weight:700;margin-bottom:.5rem}
+.app-card p{font-size:.8rem;color:var(--text-dim);line-height:1.6;flex:1}
+.app-tech{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.8rem}
+.app-tech span{font-family:'JetBrains Mono',monospace;font-size:.6rem;padding:.2rem .5rem;
+  border-radius:5px;background:rgba(108,99,255,.08);color:var(--text-dim);border:1px solid rgba(108,99,255,.1)}
+
 .timeline{max-width:900px;margin:0 auto;position:relative}
 .timeline::before{content:'';position:absolute;left:24px;top:0;bottom:0;width:2px;
-  background:linear-gradient(to bottom,var(--accent),var(--accent2),transparent)}
-.timeline-item{display:flex;gap:2rem;margin-bottom:3rem;position:relative;padding-left:60px}
+  background:linear-gradient(to bottom,var(--accent),var(--accent2),var(--accent3),transparent)}
+.timeline-item{display:flex;gap:2rem;margin-bottom:2.5rem;position:relative;padding-left:60px}
 .timeline-dot{position:absolute;left:16px;top:8px;width:18px;height:18px;border-radius:50%;
-  background:var(--accent);border:3px solid var(--bg);box-shadow:0 0 20px rgba(108,99,255,.4);z-index:1}
+  border:3px solid var(--bg);box-shadow:0 0 20px rgba(108,99,255,.4);z-index:1}
 .timeline-content{background:var(--surface);border:1px solid var(--border);border-radius:16px;
-  padding:2rem;width:100%;transition:all .3s}
+  padding:1.8rem;width:100%;transition:all .3s}
 .timeline-content:hover{border-color:var(--accent);box-shadow:0 8px 30px var(--glow)}
-.timeline-date{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--accent);
-  margin-bottom:.3rem;letter-spacing:1px}
-.timeline-role{font-size:1.2rem;font-weight:700;margin-bottom:.2rem}
-.timeline-company{font-size:.95rem;color:var(--accent2);margin-bottom:1rem;font-weight:500}
-.timeline-highlights{list-style:none;display:flex;flex-direction:column;gap:.6rem}
-.timeline-highlights li{font-size:.88rem;color:var(--text-dim);padding-left:1.2rem;position:relative;line-height:1.6}
+.timeline-date{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--accent);letter-spacing:1px;margin-bottom:.2rem}
+.timeline-role{font-size:1.15rem;font-weight:700;margin-bottom:.15rem}
+.timeline-company{font-size:.9rem;color:var(--accent2);margin-bottom:.8rem;font-weight:500}
+.timeline-highlights{list-style:none;display:flex;flex-direction:column;gap:.5rem}
+.timeline-highlights li{font-size:.82rem;color:var(--text-dim);padding-left:1.2rem;position:relative;line-height:1.55}
 .timeline-highlights li::before{content:'▹';position:absolute;left:0;color:var(--accent)}
 
-/* === PROJECTS === */
-.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.5rem;max-width:1100px;margin:0 auto}
-.project-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;
-  padding:2rem;transition:all .4s;position:relative;overflow:hidden}
-.project-card::after{content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(108,99,255,.05),transparent);opacity:0;transition:opacity .4s}
-.project-card:hover{transform:translateY(-6px);border-color:var(--accent2);
-  box-shadow:0 12px 40px rgba(0,228,160,.1)}
-.project-card:hover::after{opacity:1}
-.project-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;position:relative;z-index:1}
-.project-type{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--accent2);
-  text-transform:uppercase;letter-spacing:2px}
-.project-links a{color:var(--text-dim);text-decoration:none;font-size:1.2rem;margin-left:.8rem;transition:color .3s}
-.project-links a:hover{color:var(--accent)}
-.project-card h3{font-size:1.15rem;font-weight:700;margin-bottom:.6rem;position:relative;z-index:1}
-.project-card p{font-size:.88rem;color:var(--text-dim);line-height:1.7;position:relative;z-index:1}
-.project-tech{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:1.2rem;position:relative;z-index:1}
-.project-tech span{font-family:'JetBrains Mono',monospace;font-size:.68rem;padding:.3rem .6rem;
-  border-radius:6px;background:rgba(0,228,160,.08);color:var(--accent2);border:1px solid rgba(0,228,160,.15)}
+.oss-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.2rem}
+.oss-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.8rem;
+  transition:all .4s;position:relative;overflow:hidden}
+.oss-card:hover{transform:translateY(-5px);border-color:var(--accent);box-shadow:0 10px 35px var(--glow)}
+.oss-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.8rem}
+.oss-type{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--accent2);text-transform:uppercase;letter-spacing:2px}
+.oss-link{color:var(--text-dim);text-decoration:none;font-size:1.1rem;transition:color .3s}
+.oss-link:hover{color:var(--accent)}
+.oss-card h3{font-size:1.05rem;font-weight:700;margin-bottom:.5rem}
+.oss-card p{font-size:.82rem;color:var(--text-dim);line-height:1.6}
+.oss-tech{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.8rem}
+.oss-tech span{font-family:'JetBrains Mono',monospace;font-size:.6rem;padding:.2rem .5rem;
+  border-radius:5px;background:rgba(0,228,160,.06);color:var(--accent2);border:1px solid rgba(0,228,160,.12)}
 
-/* === IMPACT === */
-.impact-section{background:var(--bg2)}
-.impact-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;max-width:1000px;margin:0 auto}
-.impact-card{text-align:center;padding:2.5rem 1.5rem;border-radius:16px;
+.impact-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:1.2rem}
+.impact-card{text-align:center;padding:2rem 1.2rem;border-radius:16px;
   background:var(--surface);border:1px solid var(--border);transition:all .4s}
-.impact-card:hover{transform:translateY(-6px);border-color:var(--accent)}
-.impact-num{font-family:'Playfair Display',serif;font-size:3rem;font-weight:900;
+.impact-card:hover{transform:translateY(-5px);border-color:var(--accent)}
+.impact-num{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;
   background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.impact-label{font-size:.88rem;color:var(--text-dim);margin-top:.5rem;line-height:1.5}
+.impact-label{font-size:.82rem;color:var(--text-dim);margin-top:.4rem;line-height:1.4}
 
-/* === CONTACT === */
-.contact-section{text-align:center}
 .contact-card{max-width:700px;margin:0 auto;background:var(--surface);border:1px solid var(--border);
-  border-radius:24px;padding:3.5rem;position:relative;overflow:hidden}
-.contact-card::before{content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;
-  background:conic-gradient(from 0deg at 50% 50%,transparent,rgba(108,99,255,.05),transparent,
-  rgba(0,228,160,.05),transparent);animation:spin 12s linear infinite}
+  border-radius:24px;padding:3rem;position:relative;overflow:hidden;text-align:center}
+.contact-card::before{content:'';position:absolute;inset:0;
+  background:conic-gradient(from 0deg at 50% 50%,transparent,rgba(108,99,255,.04),transparent,rgba(0,228,160,.04),transparent);
+  animation:spin 12s linear infinite}
 .contact-inner{position:relative;z-index:1}
-.contact-inner h3{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:800;margin-bottom:1rem}
-.contact-inner p{color:var(--text-dim);margin-bottom:2rem;font-size:1.05rem}
-.contact-links{display:flex;justify-content:center;gap:1rem;flex-wrap:wrap}
-.contact-link{display:inline-flex;align-items:center;gap:.6rem;padding:.8rem 1.8rem;border-radius:100px;
+.contact-inner h3{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:800;margin-bottom:.8rem}
+.contact-inner p{color:var(--text-dim);margin-bottom:1.5rem;font-size:1rem}
+.contact-links{display:flex;justify-content:center;gap:.8rem;flex-wrap:wrap}
+.contact-link{display:inline-flex;align-items:center;gap:.5rem;padding:.7rem 1.5rem;border-radius:100px;
   background:rgba(108,99,255,.08);border:1px solid rgba(108,99,255,.2);color:var(--text);
-  text-decoration:none;font-size:.9rem;font-weight:500;transition:all .3s}
+  text-decoration:none;font-size:.85rem;font-weight:500;transition:all .3s}
 .contact-link:hover{background:var(--accent);border-color:var(--accent);color:#fff;
   transform:translateY(-3px);box-shadow:0 8px 25px rgba(108,99,255,.4)}
 
-/* === FOOTER === */
-footer{text-align:center;padding:2rem;border-top:1px solid var(--border);
-  font-size:.8rem;color:var(--text-dim)}
+footer{text-align:center;padding:2rem;border-top:1px solid var(--border);font-size:.78rem;color:var(--text-dim)}
 
-/* === ANIMATIONS === */
 @keyframes slideUp{to{opacity:1;transform:translateY(0)}}
 @keyframes fadeIn{to{opacity:1}}
 @keyframes scaleIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
 
-/* Scroll reveal */
 .reveal{opacity:0;transform:translateY(30px);transition:all .7s ease}
 .reveal.active{opacity:1;transform:translateY(0)}
 
-/* === MOBILE === */
 @media(max-width:900px){
   .hero-grid{grid-template-columns:1fr;text-align:center}
-  .hero-visual{order:-1}
-  .avatar-ring{width:220px;height:220px}
-  .avatar-inner{font-size:3.5rem}
+  .hero-visual{order:-1}.avatar-ring{width:200px;height:200px}.avatar-inner{font-size:3rem}
   .floating-badge{display:none}
   .hero-sub{margin-left:auto;margin-right:auto}
-  .hero-actions{justify-content:center}
-  .stats-strip{justify-content:center;gap:2rem}
-  .stat{text-align:center}
+  .hero-actions,.stats-strip{justify-content:center}
   .nav-links{display:none}
-  .projects-grid{grid-template-columns:1fr}
+  .apps-row,.oss-grid,.skills-grid{grid-template-columns:1fr}
   .timeline-item{padding-left:50px}
+  .stats-strip{gap:1.5rem}.stat{text-align:center}
+  .domain-header{flex-direction:column;text-align:center}
 }
 
-/* === GRAIN OVERLAY === */
-body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
-  opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
 
-/* Background blobs */
 .bg-blob{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0}
-.bg-blob.b1{width:500px;height:500px;background:rgba(108,99,255,.08);top:-200px;right:-100px}
-.bg-blob.b2{width:400px;height:400px;background:rgba(0,228,160,.06);bottom:-150px;left:-100px}
+.bg-blob.b1{width:500px;height:500px;background:rgba(108,99,255,.07);top:-200px;right:-100px}
+.bg-blob.b2{width:400px;height:400px;background:rgba(0,228,160,.05);bottom:-150px;left:-100px}
 </style>
 </head>
 <body>
-
 <div class="cursor-glow" id="cursorGlow"></div>
 
-<!-- NAV -->
 <nav id="navbar">
   <div class="nav-logo">SK</div>
   <ul class="nav-links">
     <li><a href="#skills">Skills</a></li>
+    <li><a href="#apps">Apps</a></li>
     <li><a href="#experience">Experience</a></li>
-    <li><a href="#projects">Projects</a></li>
+    <li><a href="#opensource">Open Source</a></li>
     <li><a href="#impact">Impact</a></li>
   </ul>
   <a href="mailto:sk698166@gmail.com" class="nav-cta">Hire Me</a>
 </nav>
 
-<!-- HERO -->
 <section class="hero" id="hero">
-  <div class="bg-blob b1"></div>
-  <div class="bg-blob b2"></div>
+  <div class="bg-blob b1"></div><div class="bg-blob b2"></div>
   <div class="hero-grid">
     <div class="hero-text">
       <h1>
         <span class="line">Hi, I'm</span>
         <span class="line">Sanjeet Kumar</span>
-        <span class="line" style="font-size:.55em;font-family:'Outfit',sans-serif;font-weight:600;color:var(--text-dim)">Senior Android Developer</span>
+        <span class="line" style="font-size:.5em;font-family:'Outfit',sans-serif;font-weight:600;color:var(--text-dim)">Senior Android Developer</span>
       </h1>
       <p class="hero-sub">
-        6+ years crafting production Android apps across ride-hailing, logistics, POS & more.
-        Expert in Kotlin, Jetpack Compose, KMP — turning complex ideas into smooth, scalable mobile experiences.
+        6+ years shipping production Android apps across ride-hailing, logistics, hospitality POS & agri-tech.
+        Expert in Kotlin, Jetpack Compose, KMP/CMP — turning complex ideas into smooth, scalable mobile experiences.
       </p>
       <div class="hero-actions">
         <a href="mailto:sk698166@gmail.com" class="btn btn-primary">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
           Get In Touch
         </a>
         <a href="https://github.com/sanjeetji" target="_blank" class="btn btn-outline">
-          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
           GitHub
         </a>
         <a href="https://www.linkedin.com/in/sanjeet-kumar-prajapati-08836215b/" target="_blank" class="btn btn-outline">
-          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
           LinkedIn
         </a>
       </div>
       <div class="stats-strip">
-        <div class="stat">
-          <div class="stat-num">6+</div>
-          <div class="stat-label">Years Exp</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">10+</div>
-          <div class="stat-label">Live Apps</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">32+</div>
-          <div class="stat-label">Repositories</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num">99.5%</div>
-          <div class="stat-label">Crash Free</div>
-        </div>
+        <div class="stat"><div class="stat-num">6+</div><div class="stat-label">Years Exp</div></div>
+        <div class="stat"><div class="stat-num">10+</div><div class="stat-label">Live Apps</div></div>
+        <div class="stat"><div class="stat-num">32+</div><div class="stat-label">Repos</div></div>
+        <div class="stat"><div class="stat-num">99.5%</div><div class="stat-label">Crash Free</div></div>
       </div>
     </div>
     <div class="hero-visual">
-      <div class="avatar-ring">
-        <div class="avatar-inner">SK</div>
-      </div>
-      <div class="floating-badge b1">
-        <span class="badge-icon">🤖</span> Kotlin Expert
-      </div>
-      <div class="floating-badge b2">
-        <span class="badge-icon">🚀</span> Jetpack Compose
-      </div>
-      <div class="floating-badge b3">
-        <span class="badge-icon">📱</span> KMP / CMP
-      </div>
+      <div class="avatar-ring"><div class="avatar-inner">SK</div></div>
+      <div class="floating-badge b1"><span class="badge-icon">🤖</span> Kotlin Expert</div>
+      <div class="floating-badge b2"><span class="badge-icon">🚀</span> Jetpack Compose</div>
+      <div class="floating-badge b3"><span class="badge-icon">📱</span> KMP / CMP</div>
+      <div class="floating-badge b4"><span class="badge-icon">💳</span> 5 Payment Gateways</div>
     </div>
   </div>
 </section>
 
-<!-- SKILLS -->
-<section class="skills-section" id="skills">
-  <div class="section-header reveal">
-    <span class="section-tag">// expertise</span>
-    <h2 class="section-title">Technical Arsenal</h2>
-    <p class="section-desc">A deep toolkit forged across 10+ production apps and multiple domains</p>
+<!-- SKILLS - 15 Cards -->
+<section class="alt-bg" id="skills">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">// expertise</span>
+      <h2 class="section-title">Technical Arsenal</h2>
+      <p class="section-desc">Deep toolkit forged across 10+ production apps and 6 industry domains</p>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card reveal"><span class="skill-icon">📱</span><h3>Mobile Development</h3><p>End-to-end Android development with native performance, polished UI, and seamless hardware integrations.</p><div class="skill-tags"><span>Kotlin</span><span>Java</span><span>Jetpack Compose</span><span>XML UI</span><span>KMP</span><span>CMP</span></div></div>
+      <div class="skill-card reveal"><span class="skill-icon">🏗️</span><h3>Architecture & Patterns</h3><p>Clean, modular codebases designed for scale with strict separation of concerns and testability.</p><div class="skill-tags"><span>MVVM</span><span>MVI</span><span>MVP</span><span>Clean Arch</span><span>SOLID</span><span>Modularization</span></div></div>
+      <div class="skill-card reveal"><span class="skill-icon">⚡</span><h3>Async & Reactive</h3><p>High-performance non-blocking data pipelines with modern reactive paradigms and background processing.</p><div class="skill-tags"><span>Coroutines</span><span>Flow</span><span>StateFlow</span><span>SharedFlow</span><span>RxJava</span><span>WorkManager</span></div></div>
+      <div class="skill-card reveal"><span class="skill-icon">🗺️</span><h3>Maps & Location Services</h3><p>Real-time tracking, geo-fencing, route optimization, and live location sharing for mobility platforms.</p><div class="skill-tags"><span>Google Maps SDK</span><span>Branch.io</span><span>Geo-Fencing</span><span>Live Tracking</span><span>Deep Linking</span></div></div>
+      <div class="skill-card reveal"><span class="skill-icon">💳</span><h3>Payment Gateways</h3><p>Multi-region PCI-compliant payment integrations across ride-hailing, shuttle, carpool, and POS platforms.</p><div class="skill-tags"><span>Stripe</span><span>Razorpay</span><span>Paystack</span><span>PawaPay</span><span>DirectPay</span></div></div>
+      <div class="skill-card reveal"><span class="skill-icon">🔥</span><h3>Firebase & Cloud</h3><p>Full Firebase stack for crash analytics, push notifications, remote config, A/B testing, and cloud storage.</p><div class="skill-tags"><span>Crashlytics</span><span>FCM</span><span>Analytics</span><span>Firestore</span><span>Remote Config</span></div></div>
+      <div class="skill-card reveal"><span class="skill-icon">🔐</span><h3>Security & Authentication</h3><p>Secure API communication, encrypted storage, KYC verification, and robust authentication flows.</p><div class="skill-tags"><span>OAuth</span><span>JWT</span><span>HyperVerge KYC</span><span>ProGuard/R8</span><span>Encryption</span></div></div>
+      <div class="skill-card reveal"><span class="skill-icon">🖨️</span><h3>Hardware & POS SDKs</h3><p>Specialized hardware integration for POS terminals, receipt printers, and barcode scanners on Sunmi & PAX devices.</p><div class="skill-tags"><span>Sunmi SDK</span><span>PAX Terminal</span><span>Star Printer</span><span>Barcode Scanner</span></div></div>
+      <div class="skill-card reveal"><span class="skill-icon">🌐</span><h3>Networking & APIs</h3><p>Robust networking layers with caching, interceptors, WebSocket support, and offline-first sync patterns.</p><div class="skill-tags"><span>Retrofit</span><span>OkHttp</span><span>REST APIs</span><span>WebSockets</span><span>GraphQL</span></div></div>
+      <div class="skill-card reveal"><span class="skill-icon">🗄️</span><h3>Databases & Storage</h3><p>Efficient local persistence with offline-first architecture, data migration, and cloud sync strategies.</p><div class="skill-tags"><span>Room</span><span>SQLite</span><span>DataStore</span><span>SQLDelight</span><span>Firestore</span></div></div>
+      <div class="skill-card reveal"><span class="skill-icon">💉</span><h3>Dependency Injection</h3><p>Scalable DI setups for modular, testable codebases with clean dependency graphs across multi-module projects.</p><div class="skill-tags"><span>Dagger-Hilt</span><span>Koin</span><span>Scoped Injection</span><span>Multi-Module DI</span></div></div>
+      <div class="skill-card reveal"><span class="skill-icon">🧪</span><h3>Testing & CI/CD</h3><p>Comprehensive testing strategies with automated build pipelines and crash-free delivery workflows.</p><div class="skill-tags"><span>JUnit</span><span>Mockito</span><span>Espresso</span><span>MockK</span><span>CI/CD</span><span>Gradle KTS</span></div></div>
+      <div class="skill-card reveal"><span class="skill-icon">🎙️</span><h3>Chat & Communication</h3><p>In-app messaging, real-time chat, social audio platforms, and push notification integrations.</p><div class="skill-tags"><span>Freshchat SDK</span><span>FCM</span><span>WebSocket Chat</span><span>Audio Streaming</span></div></div>
+      <div class="skill-card reveal"><span class="skill-icon">📊</span><h3>Performance Optimization</h3><p>Memory profiling, ANR elimination, APK optimization, and crash-free session monitoring at scale.</p><div class="skill-tags"><span>Memory Profiling</span><span>ANR Handling</span><span>R8 Minification</span><span>Dynamic Modules</span></div></div>
+      <div class="skill-card reveal"><span class="skill-icon">🔀</span><h3>DevTools & Collaboration</h3><p>Collaborative development with branching strategies, code reviews, and agile project management.</p><div class="skill-tags"><span>Git</span><span>GitHub</span><span>Bitbucket</span><span>JIRA</span><span>Postman</span><span>Android Studio</span></div></div>
+    </div>
   </div>
-  <div class="skills-grid">
-    <div class="skill-card reveal">
-      <span class="skill-icon">📱</span>
-      <h3>Mobile Development</h3>
-      <p>End-to-end Android development with native performance, polished UI, and seamless hardware integrations.</p>
-      <div class="skill-tags">
-        <span>Kotlin</span><span>Java</span><span>Jetpack Compose</span><span>XML UI</span><span>KMP</span><span>CMP</span>
+</section>
+
+<!-- PUBLISHED APPS -->
+<section id="apps">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">// published on google play</span>
+      <h2 class="section-title">Production Apps</h2>
+      <p class="section-desc">10+ live apps shipped across ride-hailing, logistics, hospitality POS, social audio & agri-tech</p>
+    </div>
+
+    <!-- Ride-Hailing -->
+    <div class="domain-group reveal">
+      <div class="domain-header">
+        <div class="domain-icon">🚖</div>
+        <div class="domain-info"><h3>Secure Express — Ride Hailing Platform</h3><p>Uber-like ecosystem · Stripe, Razorpay, Paystack, PawaPay, DirectPay · Branch.io live tracking · HyperVerge KYC</p></div>
+      </div>
+      <div class="apps-row">
+        <div class="app-card reveal">
+          <div class="app-top">
+            <span class="app-badge customer">Customer App</span>
+            <a href="https://play.google.com/store/apps/details?id=com.secureexpress.customer&hl=en_IN" target="_blank" class="play-link"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.61 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>Play Store</a>
+          </div>
+          <h4>Secure Express — Request a Ryde</h4>
+          <p>Book rides, real-time driver tracking via Branch.io, smart deep linking, multi-gateway payments, and ride history dashboard.</p>
+          <div class="app-tech"><span>Kotlin</span><span>Compose</span><span>MVVM</span><span>Stripe</span><span>Branch.io</span><span>Google Maps</span></div>
+        </div>
+        <div class="app-card reveal">
+          <div class="app-top">
+            <span class="app-badge driver">Driver App</span>
+            <a href="https://play.google.com/store/apps/details?id=com.secureexpress.driver&hl=en_IN" target="_blank" class="play-link"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.61 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>Play Store</a>
+          </div>
+          <h4>Secure Express — Driver</h4>
+          <p>Driver onboarding with HyperVerge KYC, live ride requests, turn-by-turn navigation, earnings dashboard & multi-payment collection.</p>
+          <div class="app-tech"><span>Kotlin</span><span>Compose</span><span>HyperVerge</span><span>Stripe</span><span>Google Maps</span></div>
+        </div>
       </div>
     </div>
-    <div class="skill-card reveal">
-      <span class="skill-icon">🏗️</span>
-      <h3>Architecture & Patterns</h3>
-      <p>Clean, modular codebases designed for scale with strict separation of concerns and testability.</p>
-      <div class="skill-tags">
-        <span>MVVM</span><span>MVI</span><span>Clean Architecture</span><span>SOLID</span><span>Modularization</span>
+
+    <!-- Shuttle -->
+    <div class="domain-group reveal">
+      <div class="domain-header">
+        <div class="domain-icon">🚌</div>
+        <div class="domain-info"><h3>Gala Bus — Shuttle Service Platform</h3><p>Monthly shuttle pass system · Real-time bus tracking · Razorpay integration</p></div>
+      </div>
+      <div class="apps-row">
+        <div class="app-card reveal">
+          <div class="app-top">
+            <span class="app-badge customer">Customer App</span>
+            <a href="https://play.google.com/store/search?q=gala%20shuttle&c=apps&hl=en_IN" target="_blank" class="play-link"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.61 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>Play Store</a>
+          </div>
+          <h4>Gala Bus — Passenger</h4>
+          <p>Monthly shuttle pass subscriptions (one-way/round-trip), real-time bus tracking on Google Maps & Razorpay pass purchases.</p>
+          <div class="app-tech"><span>Kotlin</span><span>Compose</span><span>Razorpay</span><span>Google Maps</span><span>Branch.io</span></div>
+        </div>
+        <div class="app-card reveal">
+          <div class="app-top">
+            <span class="app-badge driver">Driver App</span>
+            <a href="https://play.google.com/store/apps/details?id=com.galabus.driver" target="_blank" class="play-link"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.61 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>Play Store</a>
+          </div>
+          <h4>Gala Bus — Driver</h4>
+          <p>Route management, passenger check-in via pass validation, live location broadcast & trip analytics dashboard.</p>
+          <div class="app-tech"><span>Kotlin</span><span>MVVM</span><span>Google Maps</span><span>Branch.io</span></div>
+        </div>
       </div>
     </div>
-    <div class="skill-card reveal">
-      <span class="skill-icon">⚡</span>
-      <h3>Async & Reactive</h3>
-      <p>High-performance, non-blocking data pipelines with modern reactive paradigms.</p>
-      <div class="skill-tags">
-        <span>Coroutines</span><span>Flow</span><span>StateFlow</span><span>RxJava</span><span>WorkManager</span>
+
+    <!-- ECFT -->
+    <div class="domain-group reveal">
+      <div class="domain-header">
+        <div class="domain-icon">✈️</div>
+        <div class="domain-info"><h3>Emirates CAE Flight Training (ECFT)</h3><p>Corporate fleet management · Advanced authentication · Role-based analytics</p></div>
+      </div>
+      <div class="apps-row">
+        <div class="app-card reveal">
+          <div class="app-top">
+            <span class="app-badge customer">Customer App</span>
+            <a href="https://play.google.com/store/apps/details?id=ecft.ride.customer" target="_blank" class="play-link"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.61 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>Play Store</a>
+          </div>
+          <h4>ECFT Ride — Customer</h4>
+          <p>Secure corporate taxi booking with advanced auth, role-based access, ride scheduling & Stripe/Razorpay payments.</p>
+          <div class="app-tech"><span>Kotlin</span><span>MVVM</span><span>Stripe</span><span>Razorpay</span><span>Firebase Analytics</span></div>
+        </div>
+        <div class="app-card reveal">
+          <div class="app-top">
+            <span class="app-badge operator">Operator App</span>
+            <a href="https://play.google.com/store/apps/details?id=com.ecft.operator" target="_blank" class="play-link"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.61 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>Play Store</a>
+          </div>
+          <h4>ECFT — Operator</h4>
+          <p>Fleet operator dashboard — driver management, real-time fleet tracking, trip analytics & operational reporting.</p>
+          <div class="app-tech"><span>Kotlin</span><span>Clean Arch</span><span>Google Maps</span><span>Firebase</span></div>
+        </div>
       </div>
     </div>
-    <div class="skill-card reveal">
-      <span class="skill-icon">💳</span>
-      <h3>Payments & SDKs</h3>
-      <p>Multi-region payment gateway integrations and specialized hardware SDK implementations.</p>
-      <div class="skill-tags">
-        <span>Stripe</span><span>Razorpay</span><span>Sunmi SDK</span><span>PAX SDK</span><span>Star Printer</span>
+
+    <!-- Carpool -->
+    <div class="domain-group reveal">
+      <div class="domain-header">
+        <div class="domain-icon">🚗</div>
+        <div class="domain-info"><h3>Togopool — Carpool & Bikepool</h3><p>BlaBlaCar-style ride-sharing · Route matching · Freshchat · Split payments</p></div>
+      </div>
+      <div class="apps-row">
+        <div class="app-card reveal">
+          <div class="app-top">
+            <span class="app-badge standalone">Ride Share</span>
+            <a href="https://play.google.com/store/apps/details?id=prod.ridelyapp.pool" target="_blank" class="play-link"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.61 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>Play Store</a>
+          </div>
+          <h4>Togopool: Carpool & Bikepool</h4>
+          <p>Smart route matching for daily commuters, in-app Freshchat messaging, live location via Branch.io & Razorpay split payments.</p>
+          <div class="app-tech"><span>Kotlin</span><span>Compose</span><span>Freshchat</span><span>Razorpay</span><span>Branch.io</span><span>Maps</span></div>
+        </div>
       </div>
     </div>
-    <div class="skill-card reveal">
-      <span class="skill-icon">🔥</span>
-      <h3>Firebase & Cloud</h3>
-      <p>Full Firebase stack for crash analytics, push notifications, remote config, and cloud storage.</p>
-      <div class="skill-tags">
-        <span>Crashlytics</span><span>FCM</span><span>Analytics</span><span>Firestore</span><span>Remote Config</span>
+
+    <!-- Logistics -->
+    <div class="domain-group reveal">
+      <div class="domain-header">
+        <div class="domain-icon">🚚</div>
+        <div class="domain-info"><h3>Orca Logistics — Last-Mile Delivery</h3><p>Real-time parcel tracking · Geo-fenced routes · Multi-gateway payments (Razorpay, Paystack)</p></div>
+      </div>
+      <div class="apps-row">
+        <div class="app-card reveal">
+          <div class="app-top"><span class="app-badge customer">Customer App</span></div>
+          <h4>Orca Logistic — Customer</h4>
+          <p>Parcel booking, real-time delivery tracking, geo-fenced routes, delivery notifications & multi-payment support.</p>
+          <div class="app-tech"><span>Kotlin</span><span>MVVM</span><span>Google Maps</span><span>Razorpay</span><span>Paystack</span></div>
+        </div>
+        <div class="app-card reveal">
+          <div class="app-top"><span class="app-badge driver">Driver App</span></div>
+          <h4>Orca Logistic — Driver</h4>
+          <p>Route optimization, parcel pickup/drop management, real-time status updates & earnings tracking dashboard.</p>
+          <div class="app-tech"><span>Kotlin</span><span>Clean Arch</span><span>Google Maps</span><span>Geo-Fence</span></div>
+        </div>
       </div>
     </div>
-    <div class="skill-card reveal">
-      <span class="skill-icon">🧪</span>
-      <h3>Testing & DevOps</h3>
-      <p>Comprehensive testing strategies with CI/CD pipelines for reliable, rapid delivery.</p>
-      <div class="skill-tags">
-        <span>JUnit</span><span>Mockito</span><span>Espresso</span><span>MockK</span><span>CI/CD</span><span>Gradle KTS</span>
+
+    <!-- POS -->
+    <div class="domain-group reveal">
+      <div class="domain-header">
+        <div class="domain-icon">🖥️</div>
+        <div class="domain-info"><h3>Swoopos — Enterprise POS Suite</h3><p>Cloud-based EPOS for restaurants & retail · Sunmi/PAX terminals · Stripe payments</p></div>
+      </div>
+      <div class="apps-row">
+        <div class="app-card reveal">
+          <div class="app-top"><span class="app-badge enterprise">Hospitality POS</span></div>
+          <h4>Swoopos Hospitality PRO</h4>
+          <p>Full restaurant POS on Sunmi T2/T2s/D2 Mini — table management, multi-device sync, kitchen printer integration & Stripe.</p>
+          <div class="app-tech"><span>Kotlin</span><span>MVVM</span><span>Retrofit</span><span>Stripe</span><span>Sunmi SDK</span><span>Star Printer</span></div>
+        </div>
+        <div class="app-card reveal">
+          <div class="app-top"><span class="app-badge enterprise">Mobile POS</span></div>
+          <h4>WaiterMate</h4>
+          <p>Portable EPOS for Sunmi V2 Pro / PAX A920 — mobile order-taking, kitchen printing via Star Printer SDK, low-memory optimized.</p>
+          <div class="app-tech"><span>Kotlin</span><span>PAX SDK</span><span>Star Printer</span><span>Stripe</span><span>WorkManager</span></div>
+        </div>
+        <div class="app-card reveal">
+          <div class="app-top"><span class="app-badge enterprise">Retail POS</span></div>
+          <h4>Swoopos Retail</h4>
+          <p>Retail POS with barcode scanning, inventory tracking, sales reporting, Stripe payments & offline-first Room sync.</p>
+          <div class="app-tech"><span>Kotlin</span><span>Room</span><span>Barcode</span><span>Stripe</span><span>WorkManager</span></div>
+        </div>
       </div>
     </div>
+
+    <!-- Social/Music -->
+    <div class="domain-group reveal">
+      <div class="domain-header">
+        <div class="domain-icon">🎵</div>
+        <div class="domain-info"><h3>Social Audio & Music Apps</h3><p>AI-powered singing training · Social audio platform · Real-time audio processing</p></div>
+      </div>
+      <div class="apps-row">
+        <div class="app-card reveal">
+          <div class="app-top">
+            <span class="app-badge standalone">AI Music</span>
+            <a href="https://play.google.com/store/apps/details?id=com.lucidmusic.singstr&hl=en_IN&gl=US" target="_blank" class="play-link"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.61 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>Play Store</a>
+          </div>
+          <h4>SingShala — AI Singing Academy</h4>
+          <p>Real-time voice pitch detection, interactive singing lessons, vocal feedback engine powered by Kotlin, Compose & Firebase.</p>
+          <div class="app-tech"><span>Kotlin</span><span>Compose</span><span>Firebase</span><span>Audio DSP</span><span>Hilt</span></div>
+        </div>
+        <div class="app-card reveal">
+          <div class="app-top">
+            <span class="app-badge standalone">Social Audio</span>
+            <a href="https://play.google.com/store/apps/details?id=com.nanonino.urlo" target="_blank" class="play-link"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.61 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>Play Store</a>
+          </div>
+          <h4>URLO — Social Audio Platform</h4>
+          <p>Record, publish & discover short audio clips with async caching, seamless playback via RxJava & Cloud Firestore backend.</p>
+          <div class="app-tech"><span>Kotlin</span><span>RxJava</span><span>Firestore</span><span>Audio Caching</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AgriTech -->
+    <div class="domain-group reveal">
+      <div class="domain-header">
+        <div class="domain-icon">🌾</div>
+        <div class="domain-info"><h3>FarmerZone — AgriTech Advisory (IIT Mandi)</h3><p>Agriculture advisory for rural farmers · Offline-first · Weather APIs · Location-based crop recommendations</p></div>
+      </div>
+      <div class="apps-row">
+        <div class="app-card reveal">
+          <div class="app-top">
+            <span class="app-badge standalone">AgriTech</span>
+            <a href="https://play.google.com/store/apps/details?id=com.farmerzone" target="_blank" class="play-link"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M3,20.5V3.5C3,2.91 3.34,2.39 3.84,2.15L13.69,12L3.84,21.85C3.34,21.61 3,21.09 3,20.5M16.81,15.12L6.05,21.34L14.54,12.85L16.81,15.12M20.16,10.81C20.5,11.08 20.75,11.5 20.75,12C20.75,12.5 20.5,12.92 20.16,13.19L17.89,14.5L15.39,12L17.89,9.5L20.16,10.81M6.05,2.66L16.81,8.88L14.54,11.15L6.05,2.66Z"/></svg>Play Store</a>
+          </div>
+          <h4>FarmerZone</h4>
+          <p>Location-based crop recommendations, real-time weather APIs, encrypted local storage — built for low-bandwidth rural environments.</p>
+          <div class="app-tech"><span>Java</span><span>MVC</span><span>Google Maps</span><span>Weather API</span><span>Offline-First</span></div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
 <!-- EXPERIENCE -->
-<section id="experience">
-  <div class="section-header reveal">
-    <span class="section-tag">// journey</span>
-    <h2 class="section-title">Work Experience</h2>
-    <p class="section-desc">From IIT research labs to shipping ride-hailing platforms at scale</p>
-  </div>
-  <div class="timeline">
-    <div class="timeline-item reveal">
-      <div class="timeline-dot"></div>
-      <div class="timeline-content">
-        <div class="timeline-date">Mar 2024 — Present</div>
-        <div class="timeline-role">Senior Android Developer</div>
-        <div class="timeline-company">Togopool Pvt. Ltd., Gurugram</div>
-        <ul class="timeline-highlights">
-          <li>Architected Secure Express — Uber-like ride-hailing platform (Customer + Driver apps) with Stripe, Branch.io & HyperVerge KYC</li>
-          <li>Reduced app load time by 75% via Room-based offline-first design & background sync</li>
-          <li>Cut APK size by 25% through R8 minification & dynamic feature modules</li>
-          <li>Built Gala Bus Shuttle, ECFT fleet management, Togopool Carpool, and Orca Logistics platforms</li>
-          <li>Shipped 5+ live apps maintaining 4.0+ ratings and 99.5% crash-free sessions</li>
-        </ul>
-      </div>
+<section class="alt-bg" id="experience">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">// journey</span>
+      <h2 class="section-title">Work Experience</h2>
+      <p class="section-desc">From IIT research labs to shipping ride-hailing platforms at scale</p>
     </div>
-    <div class="timeline-item reveal">
-      <div class="timeline-dot" style="background:var(--accent2)"></div>
-      <div class="timeline-content">
-        <div class="timeline-date">Sep 2022 — Feb 2024</div>
-        <div class="timeline-role">Android Developer</div>
-        <div class="timeline-company">Digital Wolf Noida Pvt. Ltd., Noida</div>
-        <ul class="timeline-highlights">
-          <li>Built Swoopos Hospitality PRO — cloud-based EPOS for Sunmi terminals with Stripe payments</li>
-          <li>Developed WaiterMate portable EPOS & Swoopos Retail with offline-first sync</li>
-          <li>Migrated Java → Kotlin + Coroutines, reducing crash rate by ~40%</li>
-          <li>Integrated Sunmi, Star Printer, PAX Terminal SDKs with PCI-compliant data handling</li>
-        </ul>
+    <div class="timeline">
+      <div class="timeline-item reveal">
+        <div class="timeline-dot" style="background:var(--accent)"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">Mar 2024 — Present</div>
+          <div class="timeline-role">Senior Android Developer</div>
+          <div class="timeline-company">Togopool Pvt. Ltd., Gurugram</div>
+          <ul class="timeline-highlights">
+            <li>Architected Secure Express ride-hailing (Customer + Driver) with Stripe, Branch.io & HyperVerge KYC</li>
+            <li>Reduced app load time by 75% via Room-based offline-first design & WorkManager background sync</li>
+            <li>Cut APK size by 25% through R8 minification, dynamic feature modules & dependency audits</li>
+            <li>Built Gala Bus Shuttle, ECFT corporate fleet, Togopool Carpool & Orca Logistics</li>
+            <li>Integrated 5 payment gateways (Stripe, Razorpay, Paystack, PawaPay, DirectPay) across regions</li>
+            <li>Shipped 5+ live apps with 4.0+ ratings and 99.5% crash-free sessions</li>
+          </ul>
+        </div>
       </div>
-    </div>
-    <div class="timeline-item reveal">
-      <div class="timeline-dot" style="background:var(--accent3)"></div>
-      <div class="timeline-content">
-        <div class="timeline-date">Jun 2021 — Aug 2022</div>
-        <div class="timeline-role">Android Developer</div>
-        <div class="timeline-company">Appzlogic Mobility Solutions Pvt. Ltd., Noida</div>
-        <ul class="timeline-highlights">
-          <li>Built SingShala — AI-powered singing practice app with real-time pitch detection</li>
-          <li>Developed URLO — social audio platform with async caching & seamless playback</li>
-          <li>Modularized dependencies & introduced Hilt-based DI for improved build times</li>
-        </ul>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot" style="background:var(--accent2)"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">Sep 2022 — Feb 2024</div>
+          <div class="timeline-role">Android Developer</div>
+          <div class="timeline-company">Digital Wolf Noida Pvt. Ltd., Noida</div>
+          <ul class="timeline-highlights">
+            <li>Built Swoopos Hospitality PRO — cloud EPOS for Sunmi terminals with Stripe & kitchen printing</li>
+            <li>Developed WaiterMate portable EPOS & Swoopos Retail with offline-first Room sync</li>
+            <li>Migrated Java → Kotlin + Coroutines, reducing crash rate by ~40%</li>
+            <li>Integrated Sunmi, Star Printer & PAX Terminal SDKs with PCI-compliant data handling</li>
+          </ul>
+        </div>
       </div>
-    </div>
-    <div class="timeline-item reveal">
-      <div class="timeline-dot" style="background:#fbbf24"></div>
-      <div class="timeline-content">
-        <div class="timeline-date">Sep 2019 — Jun 2021</div>
-        <div class="timeline-role">Android Developer</div>
-        <div class="timeline-company">Indian Institute of Technology Mandi, HP</div>
-        <ul class="timeline-highlights">
-          <li>Contributed to FarmerZone — agriculture advisory app serving rural farmers</li>
-          <li>Implemented secure API communication & encrypted storage for low-bandwidth environments</li>
-        </ul>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot" style="background:var(--accent3)"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">Jun 2021 — Aug 2022</div>
+          <div class="timeline-role">Android Developer</div>
+          <div class="timeline-company">Appzlogic Mobility Solutions Pvt. Ltd., Noida</div>
+          <ul class="timeline-highlights">
+            <li>Built SingShala — AI singing app with real-time pitch detection & vocal feedback</li>
+            <li>Developed URLO — social audio platform with async caching & seamless playback</li>
+            <li>Modularized feature dependencies & introduced Hilt-based DI</li>
+          </ul>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot" style="background:var(--accent4)"></div>
+        <div class="timeline-content">
+          <div class="timeline-date">Sep 2019 — Jun 2021</div>
+          <div class="timeline-role">Android Developer</div>
+          <div class="timeline-company">Indian Institute of Technology Mandi, HP</div>
+          <ul class="timeline-highlights">
+            <li>Contributed to FarmerZone — agriculture advisory app serving rural farmers</li>
+            <li>Secure API communication & encrypted storage for low-bandwidth environments</li>
+            <li>Location-based crop recommendations with offline caching & weather APIs</li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- PROJECTS -->
-<section class="skills-section" id="projects">
-  <div class="section-header reveal">
-    <span class="section-tag">// portfolio</span>
-    <h2 class="section-title">Featured Projects</h2>
-    <p class="section-desc">Production apps & open-source experiments from my GitHub</p>
-  </div>
-  <div class="projects-grid">
-    <div class="project-card reveal">
-      <div class="project-header">
-        <span class="project-type">Production</span>
-        <div class="project-links"><a href="https://github.com/sanjeetji" target="_blank">↗</a></div>
-      </div>
-      <h3>Secure Express — Ride Hailing</h3>
-      <p>Full-featured Uber-like platform with Customer & Driver apps, real-time tracking, Stripe payments, and driver KYC verification.</p>
-      <div class="project-tech">
-        <span>Kotlin</span><span>Compose</span><span>MVVM</span><span>Stripe</span><span>Branch.io</span><span>HyperVerge</span>
-      </div>
+<!-- OPEN SOURCE -->
+<section id="opensource">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">// github · 32+ repos</span>
+      <h2 class="section-title">Open Source & Experiments</h2>
+      <p class="section-desc">Architecture demos, KMP experiments & developer tools</p>
     </div>
-    <div class="project-card reveal">
-      <div class="project-header">
-        <span class="project-type">Production</span>
-        <div class="project-links"><a href="https://github.com/sanjeetji" target="_blank">↗</a></div>
-      </div>
-      <h3>Swoopos Hospitality PRO</h3>
-      <p>Cloud-based EPOS for restaurants on Sunmi terminals — table management, multi-device sync, kitchen printer integration.</p>
-      <div class="project-tech">
-        <span>Kotlin</span><span>MVVM</span><span>Retrofit</span><span>Stripe</span><span>Sunmi SDK</span>
-      </div>
-    </div>
-    <div class="project-card reveal">
-      <div class="project-header">
-        <span class="project-type">Open Source</span>
-        <div class="project-links"><a href="https://github.com/sanjeetji" target="_blank">↗</a></div>
-      </div>
-      <h3>KMP / CMP Sample App</h3>
-      <p>Cross-platform note-taking app using Kotlin Multiplatform with shared UI via Compose Multiplatform, targeting Android & iOS.</p>
-      <div class="project-tech">
-        <span>KMP</span><span>CMP</span><span>Ktor</span><span>SQLDelight</span>
-      </div>
-    </div>
-    <div class="project-card reveal">
-      <div class="project-header">
-        <span class="project-type">Production</span>
-        <div class="project-links"><a href="https://github.com/sanjeetji" target="_blank">↗</a></div>
-      </div>
-      <h3>Togopool: Carpool & Bikepool</h3>
-      <p>BlaBlaCar-style ride-share for daily commuters with route matching, in-app chat, live tracking, and split payments.</p>
-      <div class="project-tech">
-        <span>Kotlin</span><span>Compose</span><span>Freshchat</span><span>Razorpay</span><span>Branch.io</span>
-      </div>
-    </div>
-    <div class="project-card reveal">
-      <div class="project-header">
-        <span class="project-type">Production</span>
-        <div class="project-links"><a href="https://github.com/sanjeetji" target="_blank">↗</a></div>
-      </div>
-      <h3>SingShala — AI Singing App</h3>
-      <p>AI-powered singing practice with real-time pitch detection, interactive vocal feedback, and Firebase backend.</p>
-      <div class="project-tech">
-        <span>Kotlin</span><span>Compose</span><span>Firebase</span><span>Audio DSP</span>
-      </div>
-    </div>
-    <div class="project-card reveal">
-      <div class="project-header">
-        <span class="project-type">Open Source</span>
-        <div class="project-links"><a href="https://github.com/sanjeetji" target="_blank">↗</a></div>
-      </div>
-      <h3>MVVM Boilerplate</h3>
-      <p>Production-grade Android starter with Hilt DI, Retrofit, Room, Coroutines/Flow, and comprehensive unit tests.</p>
-      <div class="project-tech">
-        <span>Kotlin</span><span>Hilt</span><span>Room</span><span>Coroutines</span><span>JUnit</span>
-      </div>
+    <div class="oss-grid">
+      <div class="oss-card reveal"><div class="oss-top"><span class="oss-type">KMP / CMP</span><a href="https://github.com/sanjeetji" target="_blank" class="oss-link">↗</a></div><h3>KMP / Compose Multiplatform Sample</h3><p>Cross-platform note-taking app — shared domain + data layer via KMP, shared UI via Compose Multiplatform targeting Android & iOS.</p><div class="oss-tech"><span>KMP</span><span>CMP</span><span>Ktor</span><span>SQLDelight</span></div></div>
+      <div class="oss-card reveal"><div class="oss-top"><span class="oss-type">Boilerplate</span><a href="https://github.com/sanjeetji/Mvvm_project" target="_blank" class="oss-link">↗</a></div><h3>MVVM Boilerplate (Kotlin)</h3><p>Production-grade Android starter with Hilt DI, Retrofit, Room, Coroutines/Flow, and comprehensive unit tests.</p><div class="oss-tech"><span>Kotlin</span><span>Hilt</span><span>Room</span><span>Coroutines</span><span>JUnit</span></div></div>
+      <div class="oss-card reveal"><div class="oss-top"><span class="oss-type">Camera</span><a href="https://github.com/sanjeetji/Image-Processing-" target="_blank" class="oss-link">↗</a></div><h3>Image Processing App</h3><p>CameraX-based image capture with multi-store persistence (SQLite, Firebase, local) — storage abstraction patterns.</p><div class="oss-tech"><span>Java</span><span>CameraX</span><span>SQLite</span><span>Firebase</span></div></div>
+      <div class="oss-card reveal"><div class="oss-top"><span class="oss-type">Media</span><a href="https://github.com/sanjeetji/Image-Editing" target="_blank" class="oss-link">↗</a></div><h3>Image Editing App</h3><p>Feature-rich Android app for image editing — filters, cropping, rotation, effects & canvas manipulation.</p><div class="oss-tech"><span>Java</span><span>Canvas</span><span>Bitmap</span><span>Filters</span></div></div>
+      <div class="oss-card reveal"><div class="oss-top"><span class="oss-type">Real-time</span><a href="https://github.com/sanjeetji/Messanger" target="_blank" class="oss-link">↗</a></div><h3>Messenger — Real-time Chat</h3><p>Lightweight one-to-one messaging app with Firebase Realtime Database, auth & push notifications.</p><div class="oss-tech"><span>Java</span><span>Firebase</span><span>Real-time DB</span><span>FCM</span></div></div>
+      <div class="oss-card reveal"><div class="oss-top"><span class="oss-type">Data</span><a href="https://github.com/sanjeetji/readExcelData" target="_blank" class="oss-link">↗</a></div><h3>Excel Data Parser</h3><p>Kotlin MVVM app to parse Excel data, store locally via Room Database, and retrieve efficiently with search.</p><div class="oss-tech"><span>Kotlin</span><span>MVVM</span><span>Room</span><span>Excel Parsing</span></div></div>
     </div>
   </div>
 </section>
 
 <!-- IMPACT -->
-<section class="impact-section" id="impact">
-  <div class="section-header reveal">
-    <span class="section-tag">// results</span>
-    <h2 class="section-title">Key Impact</h2>
-    <p class="section-desc">Numbers that speak louder than code</p>
-  </div>
-  <div class="impact-grid">
-    <div class="impact-card reveal">
-      <div class="impact-num" data-target="75">0%</div>
-      <div class="impact-label">Load Time Reduction</div>
+<section class="alt-bg" id="impact">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">// results</span>
+      <h2 class="section-title">Key Impact</h2>
+      <p class="section-desc">Numbers that speak louder than code</p>
     </div>
-    <div class="impact-card reveal">
-      <div class="impact-num" data-target="25">0%</div>
-      <div class="impact-label">APK Size Reduction</div>
-    </div>
-    <div class="impact-card reveal">
-      <div class="impact-num" data-target="40">0%</div>
-      <div class="impact-label">Crash Rate Reduced</div>
-    </div>
-    <div class="impact-card reveal">
-      <div class="impact-num special">10+</div>
-      <div class="impact-label">Production Apps on Play Store</div>
+    <div class="impact-grid">
+      <div class="impact-card reveal"><div class="impact-num" data-target="75">0%</div><div class="impact-label">Load Time Reduction</div></div>
+      <div class="impact-card reveal"><div class="impact-num" data-target="25">0%</div><div class="impact-label">APK Size Reduction</div></div>
+      <div class="impact-card reveal"><div class="impact-num" data-target="40">0%</div><div class="impact-label">Crash Rate Reduced</div></div>
+      <div class="impact-card reveal"><div class="impact-num special">10+</div><div class="impact-label">Production Apps</div></div>
+      <div class="impact-card reveal"><div class="impact-num special">5</div><div class="impact-label">Payment Gateways</div></div>
+      <div class="impact-card reveal"><div class="impact-num special">6</div><div class="impact-label">Industry Domains</div></div>
     </div>
   </div>
 </section>
 
 <!-- CONTACT -->
-<section class="contact-section" id="contact">
-  <div class="section-header reveal">
-    <span class="section-tag">// connect</span>
-    <h2 class="section-title">Let's Build Something</h2>
-    <p class="section-desc">Open to exciting Android & KMP opportunities</p>
-  </div>
-  <div class="contact-card reveal">
-    <div class="contact-inner">
-      <h3>Get In Touch</h3>
-      <p>Whether it's a full-time role, freelance project, or open-source collaboration — I'd love to hear from you.</p>
-      <div class="contact-links">
-        <a href="mailto:sk698166@gmail.com" class="contact-link">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-          Email
-        </a>
-        <a href="https://www.linkedin.com/in/sanjeet-kumar-prajapati-08836215b/" target="_blank" class="contact-link">
-          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-          LinkedIn
-        </a>
-        <a href="https://github.com/sanjeetji" target="_blank" class="contact-link">
-          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-          GitHub
-        </a>
-        <a href="tel:+917017668998" class="contact-link">
-          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          Call
-        </a>
+<section id="contact">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-tag">// connect</span>
+      <h2 class="section-title">Let's Build Something</h2>
+      <p class="section-desc">Open to exciting Android & KMP opportunities</p>
+    </div>
+    <div class="contact-card reveal">
+      <div class="contact-inner">
+        <h3>Get In Touch</h3>
+        <p>Full-time roles, freelance projects, or open-source collaboration — I'd love to hear from you.</p>
+        <div class="contact-links">
+          <a href="mailto:sk698166@gmail.com" class="contact-link"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Email</a>
+          <a href="https://www.linkedin.com/in/sanjeet-kumar-prajapati-08836215b/" target="_blank" class="contact-link"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>LinkedIn</a>
+          <a href="https://github.com/sanjeetji" target="_blank" class="contact-link"><svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>GitHub</a>
+          <a href="tel:+917017668998" class="contact-link"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>Call</a>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
-<footer>
-  <p>Designed with passion &mdash; Sanjeet Kumar © 2026</p>
-</footer>
+<footer><p>Designed with passion — Sanjeet Kumar © 2026</p></footer>
 
 <script>
-// Cursor glow follow
-const glow = document.getElementById('cursorGlow');
-document.addEventListener('mousemove', e => {
-  glow.style.left = e.clientX + 'px';
-  glow.style.top = e.clientY + 'px';
-});
-
-// Nav hide on scroll
-let lastScroll = 0;
-const nav = document.getElementById('navbar');
-window.addEventListener('scroll', () => {
-  const cur = window.scrollY;
-  nav.classList.toggle('hidden', cur > lastScroll && cur > 80);
-  lastScroll = cur;
-});
-
-// Scroll reveal
-const reveals = document.querySelectorAll('.reveal');
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach((entry, i) => {
-    if (entry.isIntersecting) {
-      setTimeout(() => entry.target.classList.add('active'), i * 100);
-      observer.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.1 });
-reveals.forEach(el => observer.observe(el));
-
-// Counter animation
-const counters = document.querySelectorAll('.impact-num[data-target]');
-const counterObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const el = entry.target;
-      const target = +el.dataset.target;
-      let current = 0;
-      const step = target / 60;
-      const timer = setInterval(() => {
-        current += step;
-        if (current >= target) {
-          el.textContent = target + '%';
-          clearInterval(timer);
-        } else {
-          el.textContent = Math.floor(current) + '%';
-        }
-      }, 20);
-      counterObserver.unobserve(el);
-    }
-  });
-}, { threshold: 0.5 });
-counters.forEach(el => counterObserver.observe(el));
-
-// Smooth scroll for nav links
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    e.preventDefault();
-    document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth' });
-  });
-});
+const glow=document.getElementById('cursorGlow');
+document.addEventListener('mousemove',e=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px'});
+let lastScroll=0;const nav=document.getElementById('navbar');
+window.addEventListener('scroll',()=>{const c=window.scrollY;nav.classList.toggle('hidden',c>lastScroll&&c>80);lastScroll=c});
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach((entry,i)=>{if(entry.isIntersecting){
+    setTimeout(()=>entry.target.classList.add('active'),i*80);observer.unobserve(entry.target)}})},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+const counterObs=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{if(entry.isIntersecting){const el=entry.target,t=+el.dataset.target;
+    let c=0;const s=t/60,timer=setInterval(()=>{c+=s;if(c>=t){el.textContent=t+'%';clearInterval(timer)}
+    else el.textContent=Math.floor(c)+'%'},20);counterObs.unobserve(el)}})},{threshold:.5});
+document.querySelectorAll('.impact-num[data-target]').forEach(el=>counterObs.observe(el));
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{e.preventDefault();
+    document.querySelector(a.getAttribute('href'))?.scrollIntoView({behavior:'smooth'})})});
 </script>
 </body>
 </html>
